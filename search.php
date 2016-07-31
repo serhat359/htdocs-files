@@ -26,6 +26,8 @@ $(document).ready(function(){
 	
 	var data = httpcall(url, {});
 	
+	data.items = data.items.filter(function(x){ return x.id.videoId });
+	
 	//debug(data);
 	
 	// set the statistics
@@ -126,7 +128,7 @@ function getValue(item){
 	if(item.statistics.dislikeCount == 0)
 		item.statistics.dislikeCount = 1;
 	
-	var ratio = item.statistics.likeCount / (item.statistics.likeCount + item.statistics.dislikeCount);
+	var ratio = item.statistics.ratio / 100;
 	return ratio * ratio * item.statistics.viewCount;
 }
 	   
