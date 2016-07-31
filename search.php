@@ -90,7 +90,7 @@ function getChannelID(user){
 }
 
 function setStats(data){
-	var ids = data.items.map(x => x.id.videoId).join(',');
+	var ids = data.items.map(x => x.id.videoId).filter(x => x && x.length != 0).join(',');
 	
 	var url = "https://www.googleapis.com/youtube/v3/videos?key="+apikey+"&part=statistics&id="+ids;
 	var data2 = httpcall(url, {});
