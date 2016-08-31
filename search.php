@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8">
-	<title>Youtube Better Search</title>
+	<title><?=$_GET['user']?> - Youtube Better Search</title>
 </head>
 <body>
 	<?php
