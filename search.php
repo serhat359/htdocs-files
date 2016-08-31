@@ -22,18 +22,21 @@ var testurl = "https://www.googleapis.com/youtube/v3/channels?part=contentDetail
 $(document).ready(function(){
 	var channelID = getChannelID(username);
 	
-	var url = "https://www.googleapis.com/youtube/v3/search?key="+apikey+"&channelId="+channelID+"&part=snippet&maxResults=50&order=viewCount"
-	
+	var url = "https://www.googleapis.com/youtube/v3/search?key="+apikey+"&channelId="+channelID+"&part=snippet&maxResults=50&order=viewCount";
 	var data = httpcall(url, {});
-	
-	data.items = data.items.filter(function(x){ return x.id.videoId });
 	
 	//debug(data);
 	
-	// set the statistics
-	setStats(data);
+	filterAndSetStats(data);
 	
-	data.items = data.items.filter(function(x){ return x.statistics && x.statistics.viewCount > 20000 });
+	var nextPageUrl = url + "&pageToken=" + data.nextPageToken;
+	var nextPageData = httpcall(nextPageUrl, {});
+	
+	//debug(nextPageData);
+	
+	filterAndSetStats(nextPageData);
+	
+	data.items = data.items.concat(nextPageData.items);
 	
 	// set the rating values
 	setValues(data);
@@ -113,6 +116,15 @@ function setValues(data){
 	for(var i = 0; i < data.items.length; i++){
 		data.items[i].ratingValue = getValue(data.items[i]);
 	}
+}
+
+function filterAndSetStats(data){
+	data.items = data.items.filter(function(x){ return x.id.videoId != null });
+	
+	// set the statistics
+	setStats(data);
+	
+	data.items = data.items.filter(function(x){ return x.statistics && x.statistics.viewCount > 20000 });
 }
 
 function columnize(data){
