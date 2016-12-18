@@ -141,7 +141,7 @@ function getValue(item){
 		item.statistics.dislikeCount = 1;
 	
 	var ratio = item.statistics.ratio / 100;
-	return ratio * ratio * item.statistics.viewCount;
+	return ratio * ratio * ratio * item.statistics.viewCount;
 }
 	   
 </script>
