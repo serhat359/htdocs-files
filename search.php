@@ -29,14 +29,16 @@ $(document).ready(function(){
 	
 	filterAndSetStats(data);
 	
-	var nextPageUrl = url + "&pageToken=" + data.nextPageToken;
-	var nextPageData = httpcall(nextPageUrl, {});
-	
-	//debug(nextPageData);
-	
-	filterAndSetStats(nextPageData);
-	
-	data.items = data.items.concat(nextPageData.items);
+	if(data.nextPageToken){
+		var nextPageUrl = url + "&pageToken=" + data.nextPageToken;
+		var nextPageData = httpcall(nextPageUrl, {});
+		
+		//debug(nextPageData);
+		
+		filterAndSetStats(nextPageData);
+		
+		data.items = data.items.concat(nextPageData.items);
+	}
 	
 	// set the rating values
 	setValues(data);
