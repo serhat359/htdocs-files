@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Youtube Embed Video</title>
+</head>
+
+<body>
+<input id="videoId" placeholder="Youtube Link or Video ID" size="50">
+<button onclick="myFunction()">Get Video</button>
+<br/>
+<br/>
+<div id="videoDiv"  align="center">
+
+</div>
+</body>
+
+<script>
+function myFunction(){
+	var input = document.getElementById('videoId');
+	var inputVal = input.value;
+	var videoId = inputVal.contains("youtube.com") ? inputVal.split("?")[1].split("=")[1] : inputVal;
+	var frame = '<iframe width="640" height="360" src="https://www.youtube.com/embed/' + videoId + '" frameborder="0" allowfullscreen=""></iframe>';
+	var videoDiv = document.getElementById('videoDiv');
+	videoDiv.innerHTML = frame;
+}
+</script>
+
+</html>

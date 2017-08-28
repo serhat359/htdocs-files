@@ -1,0 +1,167 @@
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<title>Spotify Get Artist's Best Songs</title>
+</head>
+
+<body>
+
+<textarea id="spotify-response">
+
+</textarea>
+<button type="button" onclick="setAccessToken()">Set Access Token</button>
+<br />
+<span id="accessTokenSetMessage"></span>
+<br />
+<br />
+
+<input id="artist" placeholder="Artist Name" />
+<button type="button" onclick="searchArtist()">Search Artist</button>
+<br />
+<br />
+<div id="artists"></div>
+<br />
+<table>
+	<thead>
+		<tr>
+		<th>Song Name</th>
+		<th>Popularity</th>
+		<th>Album</th>
+		<th>Album Image</th>
+		</tr>
+	</thead>
+	<tbody id="table">
+	</tbody>
+</table>
+
+<form action="https://accounts.spotify.com/api/token" method="post">
+<input name="grant_type" value="authorization_code" type="hidden" />
+<input name="code" value="AQBbFRutSzzyo9NmjbjPh3HvSLSbJ-EXgqdb6E2jhrd6CgudolHt08SVX41LBWxuxK9SAFZw1y_Le1UaPbrJrYLxAiFSzjxbD6VVYedcc4Ko-R9SzHBFHf_vtSmUivM3XsWyGS8FOyZCS7DYeStBtHcrY9T_yEE5I3o7mtNzGResCzrepnRNf3g-76AvXie1MAoGf34s6vsOPyX92FC7kDX3uKaShC8jnWkV6xQ1tRDS-u6xHC4" type="hidden" />
+<input name="redirect_uri" value="http://example.com/callback/" type="hidden" />
+<input name="client_secret" value="52ce5564440145d1bd9698b44cac55f2" type="hidden" />
+<input name="client_id" value="544370d62d92413fbcee85617ae97c43" type="hidden" />
+<button id="get_access_token">Get Access Token</button>
+</form>
+
+<script type="text/javascript" src="./jquery/jquery-3.0.0.js"></script>
+<script>
+
+var myid = '544370d62d92413fbcee85617ae97c43';
+var mysecret = '52ce5564440145d1bd9698b44cac55f2';
+var myurl = 'example.com';
+var code = 'AQBbFRutSzzyo9NmjbjPh3HvSLSbJ-EXgqdb6E2jhrd6CgudolHt08SVX41LBWxuxK9SAFZw1y_Le1UaPbrJrYLxAiFSzjxbD6VVYedcc4Ko-R9SzHBFHf_vtSmUivM3XsWyGS8FOyZCS7DYeStBtHcrY9T_yEE5I3o7mtNzGResCzrepnRNf3g-76AvXie1MAoGf34s6vsOPyX92FC7kDX3uKaShC8jnWkV6xQ1tRDS-u6xHC4';
+
+var accessToken = null;
+var oldAccessToken = 'BQBCF9iodRcQoWo1tOS4m_CiRuFoYUAWvJHSZaX74P9d_5BQVvIzgw_yb2B4PNhYzAhxHMWjRGKq_akSp8TY2ZIZr0cvNvnQJ9qpd_pDymoPtjn3_UpzHEnKi6MHBSUNnCjtQ3_mDaL2c7PPMLX05Er_x6Q';
+
+function setAccessToken(){
+	var val = $('#spotify-response').val();
+	
+	var valParsed = JSON.parse(val);
+	
+	var token = valParsed.access_token;
+	
+	accessToken = token;
+	
+	$("#accessTokenSetMessage").text("Token set!");
+	
+	$('#get_access_token').hide();
+}
+
+function searchArtist(){
+	if(accessToken){
+		var artistName = document.getElementById("artist").value;
+
+		var artistID = getArtistID(artistName);
+
+		getAndDisplaySongs(artistID);
+	}
+	else{
+		alert("Get token first!");
+	}
+}
+
+function getAndDisplaySongs(artistID){
+	var songs = getArtistSongs(artistID);
+
+	displaySongs(songs);
+}
+
+function getArtistSongs(artistID){
+	var url = 'https://api.spotify.com/v1/artists/'+artistID+'/top-tracks?country=US';
+
+	var data = httpcall(url, {});
+
+	return data;
+}
+
+function getArtistID(artistName){
+	var url = 'https://api.spotify.com/v1/search?q='+artistName+'&type=artist';
+
+	var data = httpcall(url, {});
+
+	listFoundArtists(data);
+
+	var artistID = data.artists.items[0].id;
+
+	return artistID;
+}
+
+function listFoundArtists(data){
+	try{
+		$('#artists').html('');
+		for (var i = 0; i < data.artists.items.length; i++) {
+			var artist = data.artists.items[i];
+
+			var id = artist.id;
+			var imgUrl = artist.images[1].url;
+
+			var htmlImg = '<img src="' + imgUrl + '" height="128" width="128">';
+			var aHtml = '<a href="javascript:getAndDisplaySongs(\'' + id + '\')">' + htmlImg + '</a>';
+			$('#artists').append(aHtml);
+		}
+	}
+	catch(e){
+		
+	}
+}
+
+function displaySongs(data) {
+
+	$('#table').html('');
+
+    var tr;
+    for (var i = 0; i < data.tracks.length; i++) {
+    	var track = data.tracks[i];
+        tr = $('<tr/>');
+        tr.append("<td>" + track.name + "</td>");
+        tr.append("<td>" + track.popularity + "</td>");
+        tr.append("<td>" + track.album.name + "</td>");
+        tr.append("<td>" + imgify(track.album.images[2].url) + "</td>");
+        $('#table').append(tr);
+    }
+}
+
+function imgify(url){
+	return '<img src="' + url + '">';
+}
+
+function httpcall(url, params){
+	var result;
+	
+	$.ajax(url, 
+	{
+		data: params,
+		success: function(data){ result = data; },
+		async: false,
+		headers: {
+			'Authorization': 'Bearer ' + accessToken
+		}
+	});
+	
+	return result;
+}
+
+</script>
+</body>
+</html>
