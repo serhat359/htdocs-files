@@ -19,7 +19,12 @@
 			</tr>
 			<tr>
 				<td>
-					<button onclick="escape();" style="float:right">Escape</button>
+					<button onclick="escape();" style="float:right">String Escape</button>
+				</td>
+				<td>
+				</td>
+				<td>
+					<button onclick="escape(true);">Escape To Left</button>
 				</td>
 			</tr>
 		</table>
@@ -37,7 +42,7 @@
 				document.getElementById("textArea2").value = "";
 			}
 
-			function escape(){
+			function escape(overWrite){
 				value1 = document.getElementById("textArea1").value;
 				
 				value2 = value1
@@ -45,6 +50,10 @@
 					.replaceAll("\"","\\\"");
 				
 				document.getElementById("textArea2").value = value2;
+				
+				if(overWrite === true){
+					document.getElementById("textArea1").value = value2;
+				}
 			}
 		</script>
 	</body>
