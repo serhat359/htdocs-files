@@ -6,6 +6,22 @@
 
 <body>
 
+<a href ="https://accounts.spotify.com/en/authorize?client_id=544370d62d92413fbcee85617ae97c43&response_type=code&redirect_uri=http:%2F%2Fexample.com%2Fcallback%2F&scope=user-read-private%20user-read-email&state=34fFs29kd09">Login Page</a>
+<br/>
+<br/>
+
+<form action="https://accounts.spotify.com/api/token" method="post">
+<input name="grant_type" value="authorization_code" type="hidden" />
+<input name="code" value="" placeholder="Code" />
+<input name="redirect_uri" value="http://example.com/callback/" type="hidden" />
+<input name="client_secret" value="52ce5564440145d1bd9698b44cac55f2" type="hidden" />
+<input name="client_id" value="544370d62d92413fbcee85617ae97c43" type="hidden" />
+<button id="get_access_token">Get Access Token</button>
+</form>
+
+<br/>
+<br/>
+
 <textarea id="spotify-response">
 
 </textarea>
@@ -34,16 +50,7 @@
 	</tbody>
 </table>
 
-<form action="https://accounts.spotify.com/api/token" method="post">
-<input name="grant_type" value="authorization_code" type="hidden" />
-<input name="code" value="AQBbFRutSzzyo9NmjbjPh3HvSLSbJ-EXgqdb6E2jhrd6CgudolHt08SVX41LBWxuxK9SAFZw1y_Le1UaPbrJrYLxAiFSzjxbD6VVYedcc4Ko-R9SzHBFHf_vtSmUivM3XsWyGS8FOyZCS7DYeStBtHcrY9T_yEE5I3o7mtNzGResCzrepnRNf3g-76AvXie1MAoGf34s6vsOPyX92FC7kDX3uKaShC8jnWkV6xQ1tRDS-u6xHC4" type="hidden" />
-<input name="redirect_uri" value="http://example.com/callback/" type="hidden" />
-<input name="client_secret" value="52ce5564440145d1bd9698b44cac55f2" type="hidden" />
-<input name="client_id" value="544370d62d92413fbcee85617ae97c43" type="hidden" />
-<button id="get_access_token">Get Access Token</button>
-</form>
-
-<script type="text/javascript" src="./jquery/jquery-3.0.0.js"></script>
+<script type="text/javascript" src="../jquery/jquery-3.0.0.js"></script>
 <script>
 
 var myid = '544370d62d92413fbcee85617ae97c43';
